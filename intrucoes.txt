@@ -1,0 +1,8 @@
+### Intrucoes
+
+1. <nome_do_banco>.db para ser o arquivo de banco de dados
+    1.1. sqlite viewer instalado do vscode para visualizar o banco
+2. npm instalado
+    2.1. npm install sqlite3
+    2.2. npm install sqlite
+    2.3. nmp install express
