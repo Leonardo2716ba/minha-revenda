@@ -5,11 +5,11 @@ import { open } from 'sqlite';
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON data from POST requests
+// Middleware para interpretar JSON e dados enviados pelo formulário
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Function to initialize the database and table
+// Função para inicializar o banco de dados
 async function initDatabase() {
     const db = await open({
         filename: './database/minha-revenda.db',
@@ -22,33 +22,35 @@ async function initDatabase() {
         bairro TEXT NOT NULL,
         cidade TEXT NOT NULL,
         telefone TEXT NOT NULL,
-        senha TEXT NOT NULL,
+        senha TEXT NOT NULL
     )`);
 
     console.log('Tabela criada/verificada no banco de dados.');
     return db;
 }
 
-// Endpoint to handle form submissions
+// Endpoint para cadastrar revendedores
 app.post('/cadastrar', async (req, res) => {
-    const { nome, bairro, cidade, telefone, senha = req.body;
+    const { nome, bairro, cidade, telefone, senha } = req.body;
 
     try {
         const db = await initDatabase();
-        await db.run(`INSERT INTO revendedores (nome, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?)`, [
-            nome, bairro, cidade, telefone, senha,
-        ]);
+        await db.run(
+            `INSERT INTO revendedores (nome, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?)`,
+            [nome, bairro, cidade, telefone, senha]
+        );
+
         res.status(201).send('Revendedor cadastrado com sucesso!');
     } catch (error) {
-        console.error(error);
+        console.error('Erro ao cadastrar:', error);
         res.status(500).send('Erro ao cadastrar o revendedor.');
     }
 });
 
-// Serve the frontend files
+// Servir os arquivos estáticos do frontend
 app.use(express.static('src'));
 
-// Start the server
+// Iniciar o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
