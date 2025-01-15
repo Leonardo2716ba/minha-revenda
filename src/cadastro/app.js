@@ -13,19 +13,14 @@ app.post('/cadastrar', async (req, res) => {
     const { nome, bairro, cidade, telefone, senha } = req.body;
 
     try {
-        const db = await initDatabase();
-        await db.run(
-            `INSERT INTO revendedores (nome, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?)`,
-            [nome, bairro, cidade, telefone, senha]
-        );
-        console.log('Cadastro realizado com sucesso:', req.body); // Log do cadastro
-        res.status(201).send('Revendedor cadastrado com sucesso!\nRetorne para o menu e faça o login');
+        await inserirRevendedor(nome, bairro, cidade, telefone, senha);
+        res.status(201).send('Revendedor cadastrado com sucesso!');
     } catch (error) {
-        console.error('Erro ao cadastrar:', error);
         if (error.message.includes('UNIQUE constraint failed')) {
-            res.status(400).send('O número de telefone já está cadastrado.');
+            res.status(400).send('Erro: O número de telefone já está cadastrado.');
         } else {
-            res.status(500).send('ao cadastrar o revendedor.');
+            console.error(error);
+            res.status(500).send('Erro ao cadastrar o revendedor.');
         }
     }
 });
