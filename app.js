@@ -21,7 +21,7 @@ async function initDatabase() {
         nome TEXT NOT NULL,
         bairro TEXT NOT NULL,
         cidade TEXT NOT NULL,
-        telefone TEXT NOT NULL,
+        telefone TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL
     )`);
 
@@ -39,11 +39,14 @@ app.post('/cadastrar', async (req, res) => {
             `INSERT INTO revendedores (nome, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?)`,
             [nome, bairro, cidade, telefone, senha]
         );
-
         res.status(201).send('Revendedor cadastrado com sucesso!');
     } catch (error) {
-        console.error('Erro ao cadastrar:', error);
-        res.status(500).send('Erro ao cadastrar o revendedor.');
+        if (error.message.includes('UNIQUE constraint failed')) {
+            res.status(400).send('Erro: O número de telefone já está cadastrado.');
+        } else {
+            console.error(error);
+            res.status(500).send('Erro ao cadastrar o revendedor.');
+        }
     }
 });
 
