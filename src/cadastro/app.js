@@ -1,4 +1,4 @@
-import express from 'express';
+/*import express from 'express';
 import { initDatabase, inserirRevendedor } from './src/cadastro/db.js';
 
 const app = express();
@@ -10,10 +10,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Endpoint para cadastrar revendedores
 app.post('/cadastrar', async (req, res) => {
-    const { nome, bairro, cidade, telefone, senha } = req.body;
-
+    const { nome, usuario, endereco, bairro, cidade, telefone, senha } = req.body;
     try {
-        await inserirRevendedor(nome, bairro, cidade, telefone, senha);
+        console.log(usuario);
+        await inserirRevendedor(nome, usuario, endereco, bairro, cidade, telefone, senha);
         res.status(201).send('Revendedor cadastrado com sucesso!');
     } catch (error) {
         if (error.message.includes('UNIQUE constraint failed')) {

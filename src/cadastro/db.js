@@ -11,6 +11,8 @@ export async function initDatabase() {
     await db.exec(`CREATE TABLE IF NOT EXISTS revendedores (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT NOT NULL,
+        usuario VARCHAR(30) NOT NULL UNIQUE,
+        endereco VARCHAR(100) NOT NULL, 
         bairro TEXT NOT NULL,
         cidade TEXT NOT NULL,
         telefone TEXT NOT NULL UNIQUE,
@@ -22,11 +24,14 @@ export async function initDatabase() {
 }
 
 // Função para inserir revendedores
-export async function inserirRevendedor(nome, bairro, cidade, telefone, senha) {
+export async function inserirRevendedor(nome, usuario, endereco ,bairro, cidade, telefone, senha) {
+    
     const db = await initDatabase();
     await db.run(
-        `INSERT INTO revendedores (nome, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?)`,
-        [nome, bairro, cidade, telefone, senha]
+        `INSERT INTO revendedores (nome, usuario, endereco, bairro, cidade, telefone, senha) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [nome, usuario, endereco, bairro, cidade, telefone, senha]
     );
 }
+
+
 
