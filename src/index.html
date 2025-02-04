@@ -12,9 +12,11 @@
             <img src="logo.png" alt="Logo Minha Revenda">
         </div>
         <div class="gambiarra"><h1 class="site-name">Minha Revenda</h1></div>
-        <div class="box-button-id">
-        <a href="login/index.html" class="btn-cadastrar">Login</a>
-        <a href="cadastro/index.html" class="btn-cadastrar">Cadastrar</a>
+        <div class="box-button-id" id="auth-buttons">
+            <a href="login/index.html" class="btn-cadastrar" id="btn-login">Login</a>
+            <a href="cadastro/index.html" class="btn-cadastrar" id="btn-cadastrar">Cadastrar</a>
+            <a href="perfil/index.html" class="btn-cadastrar" id="btn-perfil" style="display: none;">Meu Perfil</a>
+            <button class="btn-cadastrar" id="btn-logout" style="display: none;">Sair</button>
         </div>
     </header>
     <main class="content">
@@ -24,5 +26,30 @@
     <footer class="footer">
         <p>&copy; 2025 Minha Revenda. Todos os direitos reservados.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnLogin = document.getElementById('btn-login');
+            const btnCadastrar = document.getElementById('btn-cadastrar');
+            const btnPerfil = document.getElementById('btn-perfil');
+            const btnLogout = document.getElementById('btn-logout');
+
+            // Recupera os dados do usuário do localStorage
+            const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+            // Verifica se o usuário está logado
+            if (usuarioLogado && usuarioLogado.logado) {
+                btnLogin.style.display = 'none';
+                btnCadastrar.style.display = 'none';
+                btnPerfil.style.display = 'inline-block';
+                btnLogout.style.display = 'inline-block';
+            }
+
+            btnLogout.addEventListener('click', () => {
+                localStorage.removeItem('usuarioLogado');
+                window.location.reload();
+            });
+        });
+    </script>
 </body>
 </html>

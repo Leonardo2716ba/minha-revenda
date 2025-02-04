@@ -33,5 +33,13 @@ export async function inserirRevendedor(nome, usuario, endereco ,bairro, cidade,
     );
 }
 
+export async function verificarUsuario(usuario, senha) {
+    const db = await initDatabase();
+    console.log('Iniciando verificação de usuario');
+    const result = await db.get(
+        `SELECT nome FROM revendedores WHERE usuario = ? AND senha = ?`,
+        [usuario, senha]
+    );
 
-
+    return result ? result.nome : null;
+}
