@@ -20,6 +20,8 @@ document.getElementById('formLogin').addEventListener('submit', async (event) =>
                 mensagem.textContent = `Bem-vindo, ${data.nome}!`;
                 mensagem.style.color = 'green';
                 localStorage.setItem('usuarioLogado', JSON.stringify({ nome: data.nome, logado: true }));
+                alert("Login realizado com sucesso!");
+                window.location.href = "http://localhost:3000";
             } else {
                 mensagem.textContent = 'Usuário ou senha inválidos.';
                 mensagem.style.color = 'red';
