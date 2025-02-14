@@ -19,7 +19,15 @@ document.getElementById('formLogin').addEventListener('submit', async (event) =>
             if (data.nome) {
                 mensagem.textContent = `Bem-vindo, ${data.nome}!`;
                 mensagem.style.color = 'green';
-                localStorage.setItem('usuarioLogado', JSON.stringify({ nome: data.nome, logado: true }));
+                localStorage.setItem('usuarioLogado', JSON.stringify({ 
+                    nome: data.nome, 
+                    endereco: data.endereco,
+                    bairro: data.bairro,
+                    cidade: data.cidade,
+                    telefone: data.telefone,
+                    logado: true, 
+                    usuario: data.usuario 
+                }));
                 alert("Login realizado com sucesso!");
                 window.location.href = "http://localhost:3000";
             } else {

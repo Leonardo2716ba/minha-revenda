@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Revenda</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header class="header">
         <div class="logo">
             <img src="logo.png" alt="Logo Minha Revenda">
         </div>
-        <div class="gambiarra"><h1 class="site-name">Minha Revenda</h1></div>
+        <div class="Menu">
+            <h1 class="site-name">Minha Revenda</h1>
+        </div>
         <div class="box-button-id" id="auth-buttons">
             <a href="login/index.html" class="btn-cadastrar" id="btn-login">Login</a>
             <a href="cadastro/index.html" class="btn-cadastrar" id="btn-cadastrar">Cadastrar</a>
@@ -19,10 +23,30 @@
             <button class="btn-cadastrar" id="btn-logout" style="display: none;">Sair</button>
         </div>
     </header>
-    <main class="content">
-        <h2>Bem-vindo à Minha Revenda</h2>
-        <p>Descubra os melhores produtos para suas necessidades!</p>
-    </main>
+
+    <div class="container">
+        <div class="carousel-container">
+            <div class="carousel">
+                <img src="image1.jpg" alt="Imagem 1">
+                <img src="image2.jpeg" alt="Imagem 2">
+                <img src="image3.jpg" alt="Imagem 3">
+            </div>
+        </div>
+        <div class="text-container">
+            <h2>Descubra o Minha Revenda: A Conexão Perfeita Entre Revendedoras e Clientes!</h2>
+            <p>No Brasil, a revenda de cosméticos faz parte do dia a dia, com revendedoras presentes em praticamente
+                todos os bairros, oferecendo uma grande variedade de produtos. No entanto, encontrar exatamente o que
+                você precisa, na hora certa, pode ser um desafio.</p>
+            <p>O Minha Revenda veio para mudar esse cenário! Nossa plataforma inovadora conecta revendedoras de
+                cosméticos a clientes interessados, facilitando a compra e agilizando a entrega. Agora, você pode buscar
+                o produto desejado e verificar, em tempo real, quais revendedoras em sua região possuem o item em
+                estoque.</p>
+            <p>Sem mais esperas ou buscas intermináveis! Com o Minha Revenda, você encontra o que precisa, de forma
+                rápida e conveniente, garantindo uma experiência de compra muito mais eficiente.</p>
+            <p>Cadastre-se agora e descubra uma nova forma de comprar e vender cosméticos com facilidade!</p>
+        </div>
+    </div>
+
     <footer class="footer">
         <p>&copy; 2025 Minha Revenda. Todos os direitos reservados.</p>
     </footer>
@@ -34,22 +58,79 @@
             const btnPerfil = document.getElementById('btn-perfil');
             const btnLogout = document.getElementById('btn-logout');
 
-            // Recupera os dados do usuário do localStorage
             const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
 
-            // Verifica se o usuário está logado
             if (usuarioLogado && usuarioLogado.logado) {
                 btnLogin.style.display = 'none';
                 btnCadastrar.style.display = 'none';
                 btnPerfil.style.display = 'inline-block';
                 btnLogout.style.display = 'inline-block';
+                btnPerfil.href = `perfil/index.html`;
             }
 
             btnLogout.addEventListener('click', () => {
                 localStorage.removeItem('usuarioLogado');
                 window.location.reload();
             });
+
+            // Carrossel automático
+            let index = 0;
+            function moveCarousel() {
+                const carousel = document.querySelector('.carousel');
+                const images = document.querySelectorAll('.carousel img');
+                index = (index + 1) % images.length;
+                carousel.style.transform = `translateX(${-index * 100}%)`;
+            }
+            setInterval(moveCarousel, 4000);
         });
     </script>
+
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .carousel-container {
+            width: 45%;
+            /* Agora ocupa mais espaço */
+            height: 400px;
+            /* Altura fixa para preencher melhor */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel {
+            display: flex;
+            white-space: nowrap;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .text-container {
+            width: 50%;
+            padding: 20px;
+            background-color: #eff6f2;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-container h2 {
+            color: #125b50;
+        }
+
+        .text-container p {
+            color: #333;
+            line-height: 1.6;
+        }
+    </style>
 </body>
+
 </html>

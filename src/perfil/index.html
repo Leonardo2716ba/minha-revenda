@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - Minha Revenda</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="../logo.png" alt="Logo Minha Revenda">
+        </div>
+        <div class="gambiarra"><h1 class="site-name">Minha Revenda</h1></div>
+        <div class="box-button-id" id="auth-buttons">
+            <a href="../index.html" class="btn-menu" id="btn-login">Menu</a>
+            <button class="btn-menu" id="btn-logout" style="display: none;">Sair</button>
+        </div>
+    </header>
+    <main class="content">
+        <h2>Meu Perfil</h2>
+        <div id="perfil-info">
+            <p><strong>Nome:</strong> <span id="nome"></span></p>
+            <p><strong>Usuário:</strong> <span id="usuario"></span></p>
+            <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+            <p><strong>Bairro:</strong> <span id="bairro"></span></p>
+            <p><strong>Cidade:</strong> <span id="cidade"></span></p>
+            <p><strong>Telefone:</strong> <span id="telefone"></span></p>
+        </div>
+        <div class="buttons">
+            <a href="../editar-perfil/index.html" class="btn-menu">Editar Perfil</a>
+            <a href="../meus-produtos/index.html" class="btn-menu">Meus Produtos</a>
+        </div>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2025 Minha Revenda. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

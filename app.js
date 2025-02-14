@@ -38,7 +38,7 @@ app.post('/login', async (req, res) => {
         const nome = await verificarUsuario(usuario, senha);
 
         if (nome) {
-            res.status(200).json({ nome });
+            res.status(200).json({ nome, usuario });
         } else {
             res.status(401).send('Usuário ou senha inválidos.');
         }
@@ -48,6 +48,35 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.get('/perfil', async (req, res) => {
+    const usuario = req.headers.authorization;  // Obtém o usuário do cabeçalho
+
+    if (!usuario) {
+        return res.status(400).send('Usuário não especificado');
+    }
+
+    console.log("Usuário recebido:", usuario);
+
+    try {
+        const db = await initDatabase();
+        const perfil = await db.get(
+            `SELECT nome, usuario, endereco, bairro, cidade, telefone FROM revendedores WHERE usuario = ?`,
+            [usuario]
+        );
+
+        if (perfil) {
+            res.status(200).json(perfil);
+        } else {
+            console.log("Perfil não encontrado para o usuário:", usuario);
+            res.status(404).send('Perfil não encontrado');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar perfil:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
+
 
 // Servir os arquivos estáticos do frontend
 app.use(express.static('src'));
@@ -56,5 +85,3 @@ app.use(express.static('src'));
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
-
-//atumalaca
