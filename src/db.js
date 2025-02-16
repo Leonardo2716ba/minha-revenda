@@ -19,6 +19,17 @@ export async function initDatabase() {
         senha TEXT NOT NULL
     )`);
 
+    await db.exec(`CREATE TABLE IF NOT EXISTS produtos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        iddono INTEGER NOT NULL,
+        preco REAL NOT NULL,
+        quantidade INTEGER NOT NULL,
+        descricao TEXT NOT NULL,
+        foto BLOB NOT NULL,
+        FOREIGN KEY(iddono) REFERENCES revendedores(id)
+    )`);
+
     console.log('Tabela criada/verificada no banco de dados.');
     return db;
 }
