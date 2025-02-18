@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         if (!response.ok) {
-            throw new Error('Erro ao carregar perfil');
+            throw new Error("Erro ao carregar perfil");
         }
 
         const perfil = await response.json();

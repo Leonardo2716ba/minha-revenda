@@ -20,6 +20,7 @@ document.getElementById('formLogin').addEventListener('submit', async (event) =>
                 mensagem.textContent = `Bem-vindo, ${data.nome}!`;
                 mensagem.style.color = 'green';
                 localStorage.setItem('usuarioLogado', JSON.stringify({ 
+                    id: data.id,
                     nome: data.nome, 
                     endereco: data.endereco,
                     bairro: data.bairro,

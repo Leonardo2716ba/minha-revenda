@@ -31,6 +31,28 @@ app.post('/cadastrar', async (req, res) => {
     } 
 });
 
+app.post('/cadastrar-produto', async (req, res) => {
+    const {nome, iddono, preco, quantidade, descricao, foto} = req.body
+    console.log('body ->');
+    console.log('nome ->', nome);
+    console.log('iddono ->', iddono);
+    console.log('preco ->', preco);
+    console.log('quantidade ->', quantidade);
+    console.log('foto ->', foto);
+    console.log('passou');
+
+    try {
+        const db = await initDatabase();
+        await db.run(
+            `INSERT INTO produtos (nome, iddono, preco, quantidade, descricao, foto) VALUES (?, ?, ?, ?, ?, ?)`,
+            [nome, iddono, preco, quantidade, descricao, foto]
+        );
+        res.status(201).send('Produto cadastrado com sucesso!');
+    } catch (error){
+        console.error('Erro ao cadastrar:', error);
+    }
+})
+
 app.post('/login', async (req, res) => {
     const { usuario, senha } = req.body;
 
@@ -60,9 +82,10 @@ app.get('/perfil', async (req, res) => {
     try {
         const db = await initDatabase();
         const perfil = await db.get(
-            `SELECT nome, usuario, endereco, bairro, cidade, telefone FROM revendedores WHERE usuario = ?`,
+            `SELECT id, nome, usuario, endereco, bairro, cidade, telefone FROM revendedores WHERE usuario = ?`,
             [usuario]
         );
+        console.log("Perfil recebido:", perfil);
 
         if (perfil) {
             res.status(200).json(perfil);
