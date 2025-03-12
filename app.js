@@ -1,5 +1,5 @@
 import express from 'express';
-import { initDatabase, inserirRevendedor, verificarUsuario } from './src/db.js';
+import { initDatabase, verificarUsuario } from './src/db.js';
 
 const app = express();
 const port = 3000;
@@ -98,6 +98,49 @@ app.get('/perfil', async (req, res) => {
         res.status(500).send('Erro interno do servidor');
     }
 });
+
+app.put('/editar-perfil', async (req, res) => {
+    const usuario = req.headers.authorization; // Obtém o usuário do cabeçalho
+    const { nome, endereco, bairro, cidade, telefone, senha } = req.body;
+
+    console.log("Usuário recebido:", usuario);
+    console.log("Dados recebidos:", req.body);
+
+    if (!usuario) {
+        return res.status(400).send('Usuário não especificado');
+    }
+
+    try {
+        const db = await initDatabase();
+        
+        // Buscar o usuário antes de atualizar
+        const usuarioExiste = await db.get(`SELECT senha FROM revendedores WHERE usuario = ?`, [usuario]);
+
+        if (!usuarioExiste) {
+            return res.status(404).send('Usuário não encontrado.');
+        }
+
+        // Se a senha for vazia, manter a senha antiga
+        const novaSenha = senha ? senha : usuarioExiste.senha;
+
+        const result = await db.run(
+            `UPDATE revendedores SET nome = ?, endereco = ?, bairro = ?, cidade = ?, telefone = ?, senha = ? WHERE usuario = ?`,
+            [nome, endereco, bairro, cidade, telefone, novaSenha, usuario]
+        );
+
+        console.log("Linhas afetadas:", result.changes);
+
+        if (result.changes > 0) {
+            res.status(200).send('Perfil atualizado com sucesso!');
+        } else {
+            res.status(404).send('Usuário não encontrado.');
+        }
+    } catch (error) {
+        console.error('Erro ao editar perfil:', error);
+        res.status(500).send('Erro interno do servidor.');
+    }
+});
+
 
 
 

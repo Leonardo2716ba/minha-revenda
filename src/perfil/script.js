@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const perfil = await response.json();
-
+        console.log("id do cabra:"+usuarioLogado.id+"\n user:"+usuarioLogado.usuario)
         // Atualiza a página com os dados recebidos do servidor
         document.getElementById('nome').textContent = perfil.nome;
         document.getElementById('usuario').textContent = perfil.usuario;
