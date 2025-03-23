@@ -2,6 +2,8 @@ document.getElementById('formCadastro').addEventListener('submit', async (event)
     event.preventDefault(); // Evita o recarregamento da página
 
     const nome = document.getElementById('nome').value;
+    const usuario = document.getElementById('usuario').value;
+    const endereco = document.getElementById('endereco').value
     const bairro = document.getElementById('bairro').value;
     const cidade = document.getElementById('cidade').value;
     const telefone = document.getElementById('telefone').value;
@@ -13,7 +15,7 @@ document.getElementById('formCadastro').addEventListener('submit', async (event)
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nome, bairro, cidade, telefone, senha }),
+            body: JSON.stringify({ nome, usuario, endereco, bairro, cidade, telefone, senha }),
         });
 
         const mensagem = document.getElementById('mensagem');

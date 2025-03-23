@@ -5,4 +5,5 @@
 2. npm instalado
     2.1. npm install sqlite3
     2.2. npm install sqlite
-    2.3. nmp install express
+    2.3. npm install express
+    2.4. npm install multer

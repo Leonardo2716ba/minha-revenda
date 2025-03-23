@@ -9,6 +9,7 @@
     npm install sqlite3
     npm install sqlite
     npm install express
+    nmp install multer
     ### Compilar no diretorio minha revenda
     node app.js
 ```
