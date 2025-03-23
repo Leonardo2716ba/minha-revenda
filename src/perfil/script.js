@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': usuarioLogado.usuario  // Envia o usuário no cabeçalho
+                'Authorization': usuarioLogado.usuario
             }
         });
 
@@ -20,14 +20,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const perfil = await response.json();
-        console.log("id do cabra:"+usuarioLogado.id+"\n user:"+usuarioLogado.usuario)
-        // Atualiza a página com os dados recebidos do servidor
+
         document.getElementById('nome').textContent = perfil.nome;
         document.getElementById('usuario').textContent = perfil.usuario;
         document.getElementById('endereco').textContent = perfil.endereco;
         document.getElementById('bairro').textContent = perfil.bairro;
         document.getElementById('cidade').textContent = perfil.cidade;
         document.getElementById('telefone').textContent = perfil.telefone;
+
+        // Definir a foto do usuário
+        const fotoPerfil = document.getElementById('foto-perfil');
+        const caminhoImagem = `imagens/${perfil.usuario}.png`;
+
+        fetch(caminhoImagem)
+            .then(response => {
+                if (response.ok) {
+                    fotoPerfil.src = caminhoImagem;
+                } else {
+                    fotoPerfil.src = '../images/default.png';
+                }
+            })
+            .catch(() => {
+                fotoPerfil.src = '../images/default.png';
+            });
+
     } catch (error) {
         console.error('Erro:', error);
     }

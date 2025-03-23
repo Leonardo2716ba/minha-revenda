@@ -90,3 +90,17 @@ h2 {
     background-color: #125b50;
     color: #eff6f2;
 }
+#perfil-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#foto-perfil {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #125b50;
+}
