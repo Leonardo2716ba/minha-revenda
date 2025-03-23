@@ -8,10 +8,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const mensagem = document.getElementById("mensagem");
 
-    // Função para carregar os dados do perfil
     async function carregarPerfil() {
         try {
-            console.log("Solicitando perfil para usuário:", usuarioLogado.usuario);
             const resposta = await fetch("/perfil", {
                 method: "GET",
                 headers: {
@@ -26,15 +24,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const dados = await resposta.json();
 
-            console.log("Dados recebidos do servidor:", dados);
-
             document.getElementById("nome").value = dados.nome;
             document.getElementById("telefone").value = dados.telefone;
             document.getElementById("endereco").value = dados.endereco;
             document.getElementById("bairro").value = dados.bairro;
             document.getElementById("cidade").value = dados.cidade;
         } catch (erro) {
-            console.error("Erro ao buscar perfil:", erro);
             mensagem.innerHTML = "<p style='color: red;'>Erro ao carregar perfil.</p>";
         }
     }
@@ -62,9 +57,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             dadosAtualizados.senha = senha;
         }
 
-        console.log("Enviando dados para atualização:", dadosAtualizados);
-        console.log("Usuário enviado no cabeçalho:", usuarioLogado.usuario);
-
         try {
             const resposta = await fetch("/editar-perfil", {
                 method: "PUT",
@@ -81,8 +73,56 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             mensagem.innerHTML = "<p style='color: green;'>Perfil atualizado com sucesso!</p>";
         } catch (erro) {
-            console.error("Erro ao atualizar perfil:", erro);
             mensagem.innerHTML = "<p style='color: red;'>Erro ao atualizar perfil.</p>";
+        }
+    });
+
+    // Envio da foto de perfil
+    document.getElementById("btnEnviarFoto").addEventListener("click", async function () {
+        const arquivo = document.getElementById("foto").files[0];
+        if (!arquivo) {
+            mensagem.innerHTML = "<p style='color: red;'>Nenhuma foto selecionada!</p>";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("foto", arquivo);
+        formData.append("usuario", usuarioLogado.usuario);
+
+        try {
+            const resposta = await fetch("/upload-foto", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!resposta.ok) {
+                throw new Error("Erro ao enviar foto.");
+            }
+
+            mensagem.innerHTML = "<p style='color: green;'>Foto de perfil atualizada!</p>";
+        } catch (erro) {
+            mensagem.innerHTML = "<p style='color: red;'>Erro ao enviar foto.</p>";
+        }
+    });
+
+    // Remoção da foto de perfil
+    document.getElementById("btnRemoverFoto").addEventListener("click", async function () {
+        try {
+            const resposta = await fetch("/remover-foto", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": usuarioLogado.usuario
+                }
+            });
+
+            if (!resposta.ok) {
+                throw new Error("Erro ao remover foto.");
+            }
+
+            mensagem.innerHTML = "<p style='color: green;'>Foto removida com sucesso!</p>";
+        } catch (erro) {
+            mensagem.innerHTML = "<p style='color: red;'>Erro ao remover foto.</p>";
         }
     });
 });

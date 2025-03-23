@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Definir a foto do usuário
         const fotoPerfil = document.getElementById('foto-perfil');
-        const caminhoImagem = `imagens/${perfil.usuario}.png`;
+        const caminhoImagem = `../images/${perfil.usuario}.png`;
+        console.log(caminhoImagem);
 
         fetch(caminhoImagem)
             .then(response => {

@@ -1,4 +1,8 @@
 import express from 'express';
+import multer from "multer";
+import fs from "fs";
+import path from "path";
+
 import { initDatabase, verificarUsuario } from './src/db.js';
 
 const app = express();
@@ -150,4 +154,33 @@ app.use(express.static('src'));
 // Iniciar o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
+});
+
+const upload = multer({ dest: "../images/" });
+
+app.post("/upload-foto", upload.single("foto"), (req, res) => {
+    const usuario = req.body.usuario;
+    const fotoAntiga = path.join(process.cwd(), `src/images/${usuario}.png`);
+    const fotoNova = path.join(process.cwd(), `src/images/${usuario}.png`);
+    console.log(usuario);
+
+    if (fs.existsSync(fotoAntiga)) {
+        fs.unlinkSync(fotoAntiga); // Remove a foto antiga
+    }
+
+    fs.renameSync(req.file.path, fotoNova); // Salva a nova foto com o nome do usuário
+
+    res.status(200).json({ mensagem: "Foto enviada com sucesso!" });
+});
+
+app.delete("/remover-foto", (req, res) => {
+    const usuario = req.headers.authorization;
+    const caminhoFoto = path.join(process.cwd(), `src/images/${usuario}.png`);
+
+    if (fs.existsSync(caminhoFoto)) {
+        fs.unlinkSync(caminhoFoto);
+        return res.status(200).json({ mensagem: "Foto removida com sucesso!" });
+    }
+
+    res.status(404).json({ mensagem: "Foto não encontrada!" });
 });
