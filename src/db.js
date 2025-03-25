@@ -16,7 +16,8 @@ export async function initDatabase() {
         bairro TEXT NOT NULL,
         cidade TEXT NOT NULL,
         telefone TEXT NOT NULL UNIQUE,
-        senha TEXT NOT NULL
+        senha TEXT NOT NULL,
+        foto TEXT
     )`);
     
     await db.exec(`CREATE TABLE IF NOT EXISTS descricao (
