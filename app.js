@@ -120,15 +120,7 @@ app.get('/perfil', async (req, res) => {
 app.put('/editar-perfil', async (req, res) => {
     const usuario = req.headers.authorization;
     const { 
-        nome, 
-        endereco, 
-        bairro, 
-        cidade, 
-        telefone, 
-        senha,
-        sobre,
-        horario_funcionamento,
-        formas_pagamento
+        nome, endereco, bairro, cidade, telefone, senha, sobre, horario_funcionamento, formas_pagamento 
     } = req.body;
 
     if (!usuario) {
@@ -137,10 +129,8 @@ app.put('/editar-perfil', async (req, res) => {
 
     try {
         const db = await initDatabase();
-        
-        // 1. Buscar o revendedor
         const revendedor = await db.get(
-            `SELECT id, senha FROM revendedores WHERE usuario = ?`, 
+            `SELECT id, senha, foto FROM revendedores WHERE usuario = ?`, 
             [usuario]
         );
 
@@ -150,20 +140,13 @@ app.put('/editar-perfil', async (req, res) => {
 
         const novaSenha = senha || revendedor.senha;
 
-        // 2. Atualizar tabela revendedores
         await db.run(
             `UPDATE revendedores SET 
-                nome = ?, 
-                endereco = ?, 
-                bairro = ?, 
-                cidade = ?, 
-                telefone = ?, 
-                senha = ? 
+                nome = ?, endereco = ?, bairro = ?, cidade = ?, telefone = ?, senha = ? 
              WHERE usuario = ?`,
             [nome, endereco, bairro, cidade, telefone, novaSenha, usuario]
         );
 
-        // 3. Atualizar ou criar descrição
         const descricaoExistente = await db.get(
             `SELECT id FROM descricao WHERE id_revendedor = ?`,
             [revendedor.id]
@@ -172,33 +155,24 @@ app.put('/editar-perfil', async (req, res) => {
         if (descricaoExistente) {
             await db.run(
                 `UPDATE descricao SET 
-                    sobre = ?,
-                    horario_funcionamento = ?,
-                    formas_pagamento = ?
+                    sobre = ?, horario_funcionamento = ?, formas_pagamento = ?
                  WHERE id_revendedor = ?`,
                 [sobre, horario_funcionamento, formas_pagamento, revendedor.id]
             );
         } else {
             await db.run(
-                `INSERT INTO descricao (
-                    id_revendedor, 
-                    sobre, 
-                    horario_funcionamento, 
-                    formas_pagamento
-                ) VALUES (?, ?, ?, ?)`,
+                `INSERT INTO descricao (id_revendedor, sobre, horario_funcionamento, formas_pagamento) 
+                 VALUES (?, ?, ?, ?)`,
                 [revendedor.id, sobre, horario_funcionamento, formas_pagamento]
             );
         }
 
-        res.status(200).send('Perfil e descrição atualizados com sucesso!');
-
+        res.status(200).send('Perfil atualizado com sucesso!');
     } catch (error) {
         console.error('Erro ao editar perfil:', error);
         res.status(500).send('Erro interno do servidor');
     }
 });
-
-
 
 
 // Servir os arquivos estáticos do frontend
@@ -211,19 +185,25 @@ app.listen(port, () => {
 
 const upload = multer({ dest: "../images/" });
 
-app.post("/upload-foto", upload.single("foto"), (req, res) => {
+app.post("/upload-foto", upload.single("foto"), async (req, res) => {
     const usuario = req.body.usuario;
-    const fotoAntiga = path.join(process.cwd(), `src/images/${usuario}.png`);
-    const fotoNova = path.join(process.cwd(), `src/images/${usuario}.png`);
-    console.log(usuario);
-
-    if (fs.existsSync(fotoAntiga)) {
-        fs.unlinkSync(fotoAntiga); // Remove a foto antiga
+    if (!usuario || !req.file) {
+        return res.status(400).json({ mensagem: "Usuário ou arquivo não especificado!" });
     }
 
-    fs.renameSync(req.file.path, fotoNova); // Salva a nova foto com o nome do usuário
+    const fotoNova = path.join(process.cwd(), `src/images/${usuario}.png`);
+    if (fs.existsSync(fotoNova)) {
+        fs.unlinkSync(fotoNova);
+    }
+    fs.renameSync(req.file.path, fotoNova);
 
-    res.status(200).json({ mensagem: "Foto enviada com sucesso!" });
+    try {
+        const db = await initDatabase();
+        await db.run("UPDATE revendedores SET foto = ? WHERE usuario = ?", [fotoNova, usuario]);
+        res.status(200).json({ mensagem: "Foto enviada com sucesso!", foto: `/images/${usuario}.png` });
+    } catch (error) {
+        res.status(500).json({ mensagem: "Erro ao salvar no banco de dados" });
+    }
 });
 
 app.delete("/remover-foto", (req, res) => {
@@ -237,3 +217,4 @@ app.delete("/remover-foto", (req, res) => {
 
     res.status(404).json({ mensagem: "Foto não encontrada!" });
 });
+

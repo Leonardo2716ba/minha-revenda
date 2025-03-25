@@ -22,31 +22,39 @@
 
     <main class="content">
         <h2>Perfil de Usuário</h2>
-        <div id="perfil-container">
-            <img id="foto-perfil" src="../images/default.png" alt="Foto do Perfil">
-        </div>
-
-        <div id="perfil-info">
-            <p><strong>Nome:</strong> <span id="nome"></span></p>
-            <p><strong>Usuário:</strong> <span id="usuario"></span></p>
-            <p><strong>Endereço:</strong> <span id="endereco"></span></p>
-            <p><strong>Bairro:</strong> <span id="bairro"></span></p>
-            <p><strong>Cidade:</strong> <span id="cidade"></span></p>
-            <p><strong>Telefone:</strong> <span id="telefone"></span></p>
-        </div>
-
-        <!-- Seção de Descrição (apenas visualização) -->
-        <div id="descricao-info">
-            <h3>Sobre o Negócio</h3>
-            <p id="sobre-texto">Nenhuma informação cadastrada</p>
+        
+        <div class="profile-display">
+            <!-- Seção da Foto e Dados Pessoais -->
+            <div class="profile-picture-section">
+                <div id="perfil-container">
+                    <img id="foto-perfil" src="../images/default.png" alt="Foto do Perfil">
+                </div>
+                
+                <div id="perfil-info">
+                    <p><strong>Nome:</strong> <span id="nome"></span></p>
+                    <p><strong>Usuário:</strong> <span id="usuario"></span></p>
+                    <p><strong>Endereço:</strong> <span id="endereco"></span></p>
+                    <p><strong>Bairro:</strong> <span id="bairro"></span></p>
+                    <p><strong>Cidade:</strong> <span id="cidade"></span></p>
+                    <p><strong>Telefone:</strong> <span id="telefone"></span></p>
+                </div>
+            </div>
             
-            <h3>Horário de Funcionamento</h3>
-            <p id="horario-texto">Não definido</p>
-            
-            <h3>Formas de Pagamento</h3>
-            <p id="formas-texto">Não especificado</p>
+            <!-- Seção de Informações do Negócio -->
+            <div class="business-info-section">
+                <div id="descricao-info">
+                    <h3>Sobre o Negócio</h3>
+                    <p id="sobre-texto">Nenhuma informação cadastrada</p>
+                    
+                    <h3>Horário de Funcionamento</h3>
+                    <p id="horario-texto">Não definido</p>
+                    
+                    <h3>Formas de Pagamento</h3>
+                    <p id="formas-texto">Não especificado</p>
+                </div>
+            </div>
         </div>
-
+        
         <div class="buttons">
             <a href="../editar-perfil/index.html" class="btn-menu">Editar Perfil</a>
             <a href="../meus-produtos/index.html" class="btn-menu">Meus Produtos</a>

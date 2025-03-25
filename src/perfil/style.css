@@ -2,9 +2,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-/* Header styles */
+body {
+    background-color: #eff6f2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header styles (mantido original) */
 .header {
     width: 100%;
     display: flex;
@@ -15,30 +23,13 @@
     color: white;
 }
 
-.logo {
-    height: 50px;
-    width: auto;
-}
-
 .logo img {
     height: 50px;
-    margin-right: 15px;
-}
-
-.gambiarra {
-    margin-left: 6.3%;
 }
 
 .site-name {
     font-size: 1.5em;
     font-weight: bold;
-    margin-left: 10px;
-}
-
-/* Cadastrar button styles */
-.box-button-id {
-    display: flex;
-    gap: 10px;
 }
 
 .btn-menu {
@@ -56,44 +47,41 @@
     background-color: #0d443c;
 }
 
-/* Main content */
+/* Main content - ajustado */
 .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
     padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
     color: #125b50;
-}
-
-#perfil-info {
-    margin: 20px 0;
-    text-align: left;
-}
-
-#perfil-info p {
-    margin: 10px 0;
-}
-
-.buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-/* Footer styles */
-.footer {
     text-align: center;
-    padding: 10px;
-    background-color: #125b50;
-    color: #eff6f2;
+    margin-bottom: 20px;
 }
-#perfil-container {
+
+/* Container do perfil - nova estrutura */
+.profile-display {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 20px 0;
+}
+
+/* Seção da foto e dados pessoais */
+.profile-picture-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+}
+
+#perfil-container {
     margin-bottom: 20px;
 }
 
@@ -104,23 +92,66 @@ h2 {
     border-radius: 50%;
     border: 5px solid #125b50;
 }
-/* Adicione estas regras ao seu CSS */
-#descricao-info {
-    margin: 20px 0;
+
+#perfil-info {
+    width: 100%;
+    max-width: 400px;
+}
+
+#perfil-info p {
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* Seção de informações do negócio */
+.business-info-section {
+    flex: 1;
+    min-width: 300px;
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    width: 100%;
-    max-width: 600px;
 }
 
 #descricao-info h3 {
     color: #125b50;
-    margin-top: 15px;
-    margin-bottom: 5px;
+    margin: 15px 0 5px 0;
 }
 
 #descricao-info p {
-    color: #333;
-    line-height: 1.5;
+    padding: 8px;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Footer (mantido original) */
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #125b50;
+    color: #eff6f2;
+    margin-top: auto;
+}
+
+/* Botões (ajustado para centralizar) */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .profile-display {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile-picture-section,
+    .business-info-section {
+        width: 100%;
+    }
 }

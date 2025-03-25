@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-
     if (!usuarioLogado || !usuarioLogado.logado) {
         window.location.href = "../login/index.html";
         return;
     }
 
     const mensagem = document.getElementById("mensagem");
+    const fotoPerfil = document.getElementById("fotoPerfil");
 
     async function carregarPerfil() {
         try {
@@ -23,19 +23,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             const dados = await resposta.json();
-
-            // Preencher campos básicos
             document.getElementById("nome").value = dados.nome || "";
             document.getElementById("telefone").value = dados.telefone || "";
             document.getElementById("endereco").value = dados.endereco || "";
             document.getElementById("bairro").value = dados.bairro || "";
             document.getElementById("cidade").value = dados.cidade || "";
-            
-            // Preencher campos de descrição
             document.getElementById("sobre").value = dados.sobre || "";
             document.getElementById("horario_funcionamento").value = dados.horario_funcionamento || "";
             document.getElementById("formas_pagamento").value = dados.formas_pagamento || "";
 
+            if (dados.foto) {
+                fotoPerfil.src = dados.foto;
+            }
         } catch (erro) {
             mensagem.innerHTML = "<p style='color: red;'>Erro ao carregar perfil.</p>";
             console.error(erro);
@@ -44,63 +43,48 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     carregarPerfil();
 
-    document.getElementById("formEditarPerfil").addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        const nome = document.getElementById("nome").value;
-        const telefone = document.getElementById("telefone").value;
-        const endereco = document.getElementById("endereco").value;
-        const bairro = document.getElementById("bairro").value;
-        const cidade = document.getElementById("cidade").value;
-        const senha = document.getElementById("senha").value;
-        const confirmarSenha = document.getElementById("confirmar-senha").value;
-        const sobre = document.getElementById("sobre").value;
-        const horario_funcionamento = document.getElementById("horario_funcionamento").value;
-        const formas_pagamento = document.getElementById("formas_pagamento").value;
-
-        if (senha && senha !== confirmarSenha) {
-            mensagem.innerHTML = "<p style='color: red;'>As senhas não coincidem!</p>";
+    document.getElementById("btnEnviarFoto").addEventListener("click", async function () {
+        const inputFoto = document.getElementById("foto");
+        if (!inputFoto.files.length) {
+            mensagem.innerHTML = "<p style='color: red;'>Selecione uma foto primeiro!</p>";
             return;
         }
 
-        const dadosAtualizados = { 
-            nome, 
-            telefone, 
-            endereco, 
-            bairro, 
-            cidade,
-            sobre,
-            horario_funcionamento,
-            formas_pagamento
-        };
-        
-        if (senha) {
-            dadosAtualizados.senha = senha;
-        }
+        const formData = new FormData();
+        formData.append("foto", inputFoto.files[0]);
+        formData.append("usuario", usuarioLogado.usuario);
 
         try {
-            const resposta = await fetch("/editar-perfil", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": usuarioLogado.usuario
-                },
-                body: JSON.stringify(dadosAtualizados)
+            const resposta = await fetch("/upload-foto", {
+                method: "POST",
+                body: formData
             });
 
-            if (!resposta.ok) {
-                throw new Error("Erro ao atualizar perfil.");
-            }
-
-            mensagem.innerHTML = "<p style='color: green;'>Perfil atualizado com sucesso!</p>";
-            setTimeout(() => {
-                window.location.href = "../perfil/index.html";
-            }, 1500);
+            const resultado = await resposta.json();
+            fotoPerfil.src = resultado.foto;
+            mensagem.innerHTML = "<p style='color: green;'>Foto atualizada com sucesso!</p>";
         } catch (erro) {
-            mensagem.innerHTML = "<p style='color: red;'>Erro ao atualizar perfil.</p>";
-            console.error(erro);
         }
     });
 
-    // ... (código restante para upload de foto)
+    document.getElementById("btnRemoverFoto").addEventListener("click", async function () {
+        try {
+            const resposta = await fetch("/remover-foto", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": usuarioLogado.usuario
+                }
+            });
+
+            if (!resposta.ok) {
+                throw new Error("Erro ao remover foto.");
+            }
+
+            fotoPerfil.src = "default.png";
+            mensagem.innerHTML = "<p style='color: green;'>Foto removida com sucesso!</p>";
+        } catch (erro) {
+            mensagem.innerHTML = "<p style='color: red;'>Erro ao remover foto.</p>";
+            console.error(erro);
+        }
+    });
 });
