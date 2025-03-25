@@ -120,7 +120,15 @@ app.get('/perfil', async (req, res) => {
 app.put('/editar-perfil', async (req, res) => {
     const usuario = req.headers.authorization;
     const { 
-        nome, endereco, bairro, cidade, telefone, senha, sobre, horario_funcionamento, formas_pagamento 
+        nome, 
+        endereco, 
+        bairro, 
+        cidade, 
+        telefone, 
+        senha,
+        sobre,
+        horario_funcionamento,
+        formas_pagamento
     } = req.body;
 
     if (!usuario) {
@@ -129,8 +137,10 @@ app.put('/editar-perfil', async (req, res) => {
 
     try {
         const db = await initDatabase();
+        
+        // 1. Buscar o revendedor
         const revendedor = await db.get(
-            `SELECT id, senha, foto FROM revendedores WHERE usuario = ?`, 
+            `SELECT id, senha FROM revendedores WHERE usuario = ?`, 
             [usuario]
         );
 
@@ -140,31 +150,46 @@ app.put('/editar-perfil', async (req, res) => {
 
         const novaSenha = senha || revendedor.senha;
 
+        // 2. Atualizar tabela revendedores (mantendo funcionalidade antiga)
         await db.run(
             `UPDATE revendedores SET 
-                nome = ?, endereco = ?, bairro = ?, cidade = ?, telefone = ?, senha = ? 
+                nome = ?, 
+                endereco = ?, 
+                bairro = ?, 
+                cidade = ?, 
+                telefone = ?, 
+                senha = ? 
              WHERE usuario = ?`,
             [nome, endereco, bairro, cidade, telefone, novaSenha, usuario]
         );
 
-        const descricaoExistente = await db.get(
-            `SELECT id FROM descricao WHERE id_revendedor = ?`,
-            [revendedor.id]
-        );
+        // 3. Atualizar ou criar descrição (nova funcionalidade)
+        if (sobre !== undefined || horario_funcionamento !== undefined || formas_pagamento !== undefined) {
+            const descricaoExistente = await db.get(
+                `SELECT id FROM descricao WHERE id_revendedor = ?`,
+                [revendedor.id]
+            );
 
-        if (descricaoExistente) {
-            await db.run(
-                `UPDATE descricao SET 
-                    sobre = ?, horario_funcionamento = ?, formas_pagamento = ?
-                 WHERE id_revendedor = ?`,
-                [sobre, horario_funcionamento, formas_pagamento, revendedor.id]
-            );
-        } else {
-            await db.run(
-                `INSERT INTO descricao (id_revendedor, sobre, horario_funcionamento, formas_pagamento) 
-                 VALUES (?, ?, ?, ?)`,
-                [revendedor.id, sobre, horario_funcionamento, formas_pagamento]
-            );
+            if (descricaoExistente) {
+                await db.run(
+                    `UPDATE descricao SET 
+                        sobre = COALESCE(?, sobre),
+                        horario_funcionamento = COALESCE(?, horario_funcionamento),
+                        formas_pagamento = COALESCE(?, formas_pagamento)
+                     WHERE id_revendedor = ?`,
+                    [sobre, horario_funcionamento, formas_pagamento, revendedor.id]
+                );
+            } else {
+                await db.run(
+                    `INSERT INTO descricao (
+                        id_revendedor, 
+                        sobre, 
+                        horario_funcionamento, 
+                        formas_pagamento
+                    ) VALUES (?, ?, ?, ?)`,
+                    [revendedor.id, sobre, horario_funcionamento, formas_pagamento]
+                );
+            }
         }
 
         res.status(200).send('Perfil atualizado com sucesso!');
