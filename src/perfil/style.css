@@ -104,3 +104,23 @@ h2 {
     border-radius: 50%;
     border: 5px solid #125b50;
 }
+/* Adicione estas regras ao seu CSS */
+#descricao-info {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+}
+
+#descricao-info h3 {
+    color: #125b50;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#descricao-info p {
+    color: #333;
+    line-height: 1.5;
+}

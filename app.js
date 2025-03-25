@@ -75,40 +75,61 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/perfil', async (req, res) => {
-    const usuario = req.headers.authorization;  // Obtém o usuário do cabeçalho
-
-    if (!usuario) {
-        return res.status(400).send('Usuário não especificado');
-    }
-
-    console.log("Usuário recebido:", usuario);
+    const usuario = req.headers.authorization;
 
     try {
         const db = await initDatabase();
+        
+        // 1. Buscar informações básicas
         const perfil = await db.get(
-            `SELECT id, nome, usuario, endereco, bairro, cidade, telefone FROM revendedores WHERE usuario = ?`,
+            `SELECT id, nome, usuario, endereco, bairro, cidade, telefone 
+             FROM revendedores WHERE usuario = ?`, 
             [usuario]
         );
-        console.log("Perfil recebido:", perfil);
 
-        if (perfil) {
-            res.status(200).json(perfil);
-        } else {
-            console.log("Perfil não encontrado para o usuário:", usuario);
-            res.status(404).send('Perfil não encontrado');
+        if (!perfil) {
+            return res.status(404).json({ 
+                error: 'Perfil não encontrado' 
+            });
         }
+
+        // 2. Buscar descrição
+        const descricao = await db.get(
+            `SELECT sobre, horario_funcionamento, formas_pagamento 
+             FROM descricao WHERE id_revendedor = ?`,
+            [perfil.id]
+        );
+
+        // 3. Combinar resultados
+        const resultado = {
+            ...perfil,
+            ...(descricao || {}) // Retorna campos vazios se não houver descrição
+        };
+
+        res.status(200).json(resultado);
+
     } catch (error) {
-        console.error('Erro ao buscar perfil:', error);
-        res.status(500).send('Erro interno do servidor');
+        console.error('Erro no endpoint /perfil:', error);
+        res.status(500).json({ 
+            error: 'Erro interno do servidor',
+            details: error.message 
+        });
     }
 });
 
 app.put('/editar-perfil', async (req, res) => {
-    const usuario = req.headers.authorization; // Obtém o usuário do cabeçalho
-    const { nome, endereco, bairro, cidade, telefone, senha } = req.body;
-
-    console.log("Usuário recebido:", usuario);
-    console.log("Dados recebidos:", req.body);
+    const usuario = req.headers.authorization;
+    const { 
+        nome, 
+        endereco, 
+        bairro, 
+        cidade, 
+        telefone, 
+        senha,
+        sobre,
+        horario_funcionamento,
+        formas_pagamento
+    } = req.body;
 
     if (!usuario) {
         return res.status(400).send('Usuário não especificado');
@@ -117,31 +138,63 @@ app.put('/editar-perfil', async (req, res) => {
     try {
         const db = await initDatabase();
         
-        // Buscar o usuário antes de atualizar
-        const usuarioExiste = await db.get(`SELECT senha FROM revendedores WHERE usuario = ?`, [usuario]);
+        // 1. Buscar o revendedor
+        const revendedor = await db.get(
+            `SELECT id, senha FROM revendedores WHERE usuario = ?`, 
+            [usuario]
+        );
 
-        if (!usuarioExiste) {
-            return res.status(404).send('Usuário não encontrado.');
+        if (!revendedor) {
+            return res.status(404).send('Usuário não encontrado');
         }
 
-        // Se a senha for vazia, manter a senha antiga
-        const novaSenha = senha ? senha : usuarioExiste.senha;
+        const novaSenha = senha || revendedor.senha;
 
-        const result = await db.run(
-            `UPDATE revendedores SET nome = ?, endereco = ?, bairro = ?, cidade = ?, telefone = ?, senha = ? WHERE usuario = ?`,
+        // 2. Atualizar tabela revendedores
+        await db.run(
+            `UPDATE revendedores SET 
+                nome = ?, 
+                endereco = ?, 
+                bairro = ?, 
+                cidade = ?, 
+                telefone = ?, 
+                senha = ? 
+             WHERE usuario = ?`,
             [nome, endereco, bairro, cidade, telefone, novaSenha, usuario]
         );
 
-        console.log("Linhas afetadas:", result.changes);
+        // 3. Atualizar ou criar descrição
+        const descricaoExistente = await db.get(
+            `SELECT id FROM descricao WHERE id_revendedor = ?`,
+            [revendedor.id]
+        );
 
-        if (result.changes > 0) {
-            res.status(200).send('Perfil atualizado com sucesso!');
+        if (descricaoExistente) {
+            await db.run(
+                `UPDATE descricao SET 
+                    sobre = ?,
+                    horario_funcionamento = ?,
+                    formas_pagamento = ?
+                 WHERE id_revendedor = ?`,
+                [sobre, horario_funcionamento, formas_pagamento, revendedor.id]
+            );
         } else {
-            res.status(404).send('Usuário não encontrado.');
+            await db.run(
+                `INSERT INTO descricao (
+                    id_revendedor, 
+                    sobre, 
+                    horario_funcionamento, 
+                    formas_pagamento
+                ) VALUES (?, ?, ?, ?)`,
+                [revendedor.id, sobre, horario_funcionamento, formas_pagamento]
+            );
         }
+
+        res.status(200).send('Perfil e descrição atualizados com sucesso!');
+
     } catch (error) {
         console.error('Erro ao editar perfil:', error);
-        res.status(500).send('Erro interno do servidor.');
+        res.status(500).send('Erro interno do servidor');
     }
 });
 
