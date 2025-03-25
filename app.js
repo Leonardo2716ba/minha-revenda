@@ -99,6 +99,29 @@ app.get('/perfil', async (req, res) => {
     }
 });
 
+app.get('/meus_produtos', async(req, res) => {
+    const id = req.headers.authorization;
+    console.log("ID", id);
+
+    try {
+        const db = await initDatabase();
+        const produtos = await db.all(
+            `Select nome, iddono, preco, quantidade, descricao, foto FROM produtos where iddono = ?`,
+            [id]
+        );
+        console.log("produtos recebidos", produtos);
+        if (produtos) {
+            res.status(200).json(produtos);
+        } else {
+            console.log("Produtos não encontrado para o usuário com id:", id);
+            res.status(404).send('Produtos não encontrados');
+        }
+
+    } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+})
 
 
 // Servir os arquivos estáticos do frontend
