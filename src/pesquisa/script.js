@@ -44,10 +44,21 @@ function getCityId() {
 document.getElementById('searchButton').addEventListener('click', function() {
     // Obtém o valor digitado no campo de pesquisa
     let searchQuery = document.getElementById('searchInput').value;
+    const cityId = document.getElementById('citySelect').value;
+
+    if (searchQuery === "") {
+    alert("Digite algo para pesquisar!");
+    return;
+    }
+
+    if (!cityId) {
+    alert("Selecione uma cidade!");
+    return;
+}
 
     // Se o usuário digitou algo, redireciona para a página de pesquisa com o parâmetro
     if (searchQuery.trim() !== "") {
-        window.location.href = `index.html?q=${encodeURIComponent(searchQuery)}`;
+        window.location.href = `index.html?q=${encodeURIComponent(searchQuery)}&cidade=${cityId}`;
     }
 });
 
@@ -70,3 +81,27 @@ function preencherTabela(produtos) {
         tabelaBody.appendChild(linha);
     });
 }
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const selectCidade = document.getElementById("citySelect");
+
+    try {
+        const response = await fetch('/buscacidade', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }); // Chamada à API
+        const cidades = await response.json();
+
+        cidades.forEach(cidade => {
+            const option = document.createElement("option");
+            option.value = cidade.id;  // O valor armazenado será o ID
+            option.textContent = cidade.cidadei; // O nome será exibido no dropdown
+            citySelect.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar cidades:", error);
+    }
+    });
