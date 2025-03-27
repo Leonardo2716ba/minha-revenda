@@ -40,6 +40,11 @@ export async function initDatabase() {
         FOREIGN KEY(iddono) REFERENCES revendedores(id)
     )`);
 
+    await db.exec(`CREATE TABLE IF NOT EXISTS cidades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        cidadei TEXT NOT NULL
+        )`)
+
     console.log('Tabelas criadas/verificadas no banco de dados.');
     return db;
 }

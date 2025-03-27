@@ -35,3 +35,27 @@ document.getElementById('formCadastro').addEventListener('submit', async (event)
         mensagem.style.color = 'red';
     }
 });
+
+document.addEventListener("DOMContentLoaded", async function () {
+    const selectCidade = document.getElementById("cidade");
+
+    try {
+        const response = await fetch('/buscacidade', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }); // Chamada à API
+        const cidades = await response.json();
+
+        cidades.forEach(cidade => {
+            const option = document.createElement("option");
+            option.value = cidade.id;  // O valor armazenado será o ID
+            option.textContent = cidade.cidadei; // O nome será exibido no dropdown
+            selectCidade.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar cidades:", error);
+    }
+});

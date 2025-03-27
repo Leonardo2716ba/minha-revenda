@@ -41,6 +41,14 @@ input[type="password"]{
     border-radius: 4px;
 }
 
+.cidade {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 button {
     background-color: #63b289;
     color: white;
@@ -54,6 +62,13 @@ button {
 
 button:hover {
     background-color: #125b50;
+}
+
+select {
+    color: black; /* Cor do texto visível */
+    background-color: white; /* Fundo branco para contraste */
+    border: 1px solid #ccc; /* Borda visível */
+    padding: 8px; /* Melhor espaçamento */
 }
 
 

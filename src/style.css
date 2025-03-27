@@ -118,3 +118,10 @@ h2 {
 .barrabusca button:hover {
     background-color: #0d443c;
 }
+
+select {
+    color: black; /* Cor do texto visível */
+    background-color: white; /* Fundo branco para contraste */
+    border: 1px solid #ccc; /* Borda visível */
+    padding: 8px; /* Melhor espaçamento */
+}

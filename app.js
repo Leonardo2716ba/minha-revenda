@@ -250,6 +250,26 @@ app.get('/pesquisa', async(req, res) =>{
     }
 });
 
+app.get('/buscacidade', async(req,res) =>{
+    try{
+        const db = await initDatabase();
+        const cidades = await db.all(
+            `SELECT id, cidadei
+             FROM cidades`
+        )
+        console.log("Cidades:", cidades);
+        if(cidades){
+            res.status(200).json(cidades);
+        } else {
+            console.log("Não foram encontradas cidades");
+            res.status(404).send('Cidades não encontrados');
+        }
+    } catch (error){
+        console.error('Erro ao buscar produtos:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
+
 // Servir os arquivos estáticos do frontend
 app.use(express.static('src'));
 
