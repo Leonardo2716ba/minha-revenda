@@ -18,30 +18,35 @@
             <a href="../index.html" class="btn-menu" id="btn-login">Voltar</a>
         </div>
     </header>
-    <div class = "barrabusca">
-        <input type ="text" id="searchInput" placeholder="Pesquisar...">
-        <button id="searchButton">Buscar</button>
-    </div>
+    
     <main class="content">
-        
+        <h2>Pesquisar Produtos</h2>
+        <div class="barrabusca">
+            <input type="text" id="searchInput" placeholder="Pesquisar...">
+            <button id="searchButton">Buscar</button>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Quantidade</th>
+                    <th>Descrição</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody id="mytable">
+                
+            </tbody>
+        </table>
     </main>
-    <table class="table">
-        <thead>
-            <tr class="tabler">
-                <th>Foto</th>
-                <th>Nome</th>
-                <th>Preço</th>
-                <th>Quantidade</th>
-                <th>Descrição</th>
-                <th>Telefone</th>
-            </tr>
-        </thead>
-        <tbody id="mytable">
-            
-        </tbody>
-    </table>
+    
+    <footer class="footer">
+        <p>&copy; 2025 Minha Revenda</p>
+    </footer>
     
     <script src="script.js"></script>
-    <h2 id="searchResult"></h2>
 </body>
 </html>

@@ -5,6 +5,13 @@
     font-family: Arial, sans-serif;
 }
 
+body {
+    background-color: #eff6f2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .header {
     width: 100%;
     display: flex;
@@ -18,10 +25,6 @@
 .logo img {
     height: 50px;
     margin-right: 15px;
-}
-
-.gambiarra {
-    margin-left: 0.2%;
 }
 
 .site-name {
@@ -44,28 +47,41 @@
     background-color: #0d443c;
 }
 
-.barrabusca {
-    width: auto;
-    display: flex;
-    margin-top: 8px;
-    text-align: center;
-    display: block;
-    font-size: 15px;
+.content {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.barrabusca input{
-    width: 50%; /* Ajuste para o tamanho desejado */
-    max-width: 600px; /* Limita a largura máxima */
-    height: 42px; /* Aumenta a altura */
-    font-size: 18px; /* Aumenta o tamanho do texto */
+h2 {
+    color: #125b50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.barrabusca {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.barrabusca input {
+    width: 50%;
+    max-width: 600px;
+    height: 40px;
+    font-size: 18px;
     padding: 5px 10px;
-    border: 3px solid #14b87f;
+    border: 2px solid #14b87f;
     border-radius: 5px;
 }
 
 .barrabusca button {
     height: 40px;
-    margin-left: 10px;
     padding: 5px 15px;
     background-color: #058e93;
     color: white;
@@ -78,38 +94,22 @@
 .barrabusca button:hover {
     background-color: #0d443c;
 }
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
 
-.table{
-    margin-top: 20px;
-    padding: 10px;
+.table {
     width: 100%;
-    gap: 20px;
-    border-collapse: separate; /* Mantém as bordas separadas */
-    border-spacing: 5px; /* Define o espaço entre as bordas */
-    border: none;
-    /* border: 1 px solid black; */
-}
-
-.table, tr, th, td{
-    /* border: 2px solid #ff5733; Cor laranja avermelhada */
     border-collapse: collapse;
-    /* border: 1px solid black; */
+    margin-top: 20px;
+    background: white;
 }
 
 th, td {
-    border: 2px solid #63b289; /* Azul */
-    background-color: #f5f5f5; /* Fundo cinza claro para destacar */
-}
-
-td{
     padding: 15px;
     text-align: center;
+    border: 2px solid #63b289;
+}
+
+th {
+    background-color: #f5f5f5;
 }
 
 .footer {
@@ -117,4 +117,16 @@ td{
     padding: 10px;
     background-color: #125b50;
     color: #eff6f2;
+    margin-top: auto;
 }
+
+@media (max-width: 768px) {
+    .barrabusca {
+        flex-direction: column;
+        align-items: center;
+    }
+    .barrabusca input {
+        width: 80%;
+    }
+}
+</style>

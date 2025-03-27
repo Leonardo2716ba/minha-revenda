@@ -10,8 +10,8 @@ const app = express();
 const port = 3000;
 
 // Middleware para interpretar JSON e dados enviados pelo formulário
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Endpoint para cadastrar revendedores
 app.post('/cadastrar', async (req, res) => {
