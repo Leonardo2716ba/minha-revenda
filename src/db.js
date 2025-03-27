@@ -14,7 +14,7 @@ export async function initDatabase() {
         usuario VARCHAR(30) NOT NULL UNIQUE,
         endereco VARCHAR(100) NOT NULL, 
         bairro TEXT NOT NULL,
-        cidade TEXT NOT NULL,
+        cidade INTEGER NOT NULL,
         telefone TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL,
         foto TEXT
