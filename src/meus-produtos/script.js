@@ -58,7 +58,7 @@ function preencherTabela(produtos) {
         const linha = document.createElement('tr');
 
         linha.innerHTML = `
-            <td><img src="${produto.foto}" alt="${produto.nome}" width="150" height="150"></td>
+            <td><img src="${produto.foto}" alt="${produto.nome}" onerror="this.src='../soap.png'" width="150" height="150"></td>
             <td>${produto.nome}</td>
             <td>R$ ${produto.preco.toFixed(2)}</td>
             <td>${produto.quantidade}</td>

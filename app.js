@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 
 import { initDatabase, verificarUsuario } from './src/db.js';
+import { error } from 'console';
 
 const app = express();
 const port = 3000;
@@ -213,7 +214,7 @@ app.get('/meus_produtos', async(req, res) => {
         if (produtos) {
             res.status(200).json(produtos);
         } else {
-            console.log("Produtos não encontrado para o usuário com id:", id);
+            console.log("Não foram encontrados produtos para o usuário com id:", id);
             res.status(404).send('Produtos não encontrados');
         }
 
@@ -222,6 +223,32 @@ app.get('/meus_produtos', async(req, res) => {
         res.status(500).send('Erro interno do servidor');
     }
 })
+
+app.get('/pesquisa', async(req, res) =>{
+    const pesquisado = req.headers.authorization;
+
+    try {
+        const pesquisalike = `%${pesquisado}%`;
+        const db = await initDatabase();
+        const produtos_pesquisados = await db.all(
+            `SELECT	produtos.foto , produtos.nome, produtos.preco, produtos.quantidade, produtos.descricao, revendedores.telefone
+             FROM	produtos INNER JOIN revendedores
+             ON produtos.iddono = revendedores.id
+             WHERE (produtos.nome LIKE ?) or (produtos.descricao LIKE ?)`,
+             [pesquisalike, pesquisalike]
+        );
+        console.log("produtos recebidos", produtos_pesquisados);
+        if(produtos_pesquisados){
+            res.status(200).json(produtos_pesquisados);
+        }else {
+            console.log("Não foram encontrados produtos que encaixam com:", pesquisado);
+            res.status(404).send('Produtos não encontrados');
+        }
+    } catch (error){
+        console.error('Erro ao buscar produtos:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+});
 
 // Servir os arquivos estáticos do frontend
 app.use(express.static('src'));

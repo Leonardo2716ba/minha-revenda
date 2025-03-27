@@ -23,7 +23,10 @@
             <button class="btn-cadastrar" id="btn-logout" style="display: none;">Sair</button>
         </div>
     </header>
-
+    <div class = "barrabusca">
+        <input type ="text" id="searchInput" placeholder="Pesquisar...">
+        <button id="searchButton">Buscar</button>
+    </div>
     <div class="container">
         <div class="carousel-container">
             <div class="carousel">
@@ -83,6 +86,8 @@
             }
             setInterval(moveCarousel, 4000);
         });
+
+        
     </script>
 
     <style>
@@ -131,6 +136,18 @@
             line-height: 1.6;
         }
     </style>
+
+<script>
+    document.getElementById('searchButton').addEventListener('click', function() {
+        // Obtém o valor digitado no campo de pesquisa
+        let searchQuery = document.getElementById('searchInput').value;
+
+        // Se o usuário digitou algo, redireciona para a página de pesquisa com o parâmetro
+        if (searchQuery.trim() !== "") {
+            window.location.href = `pesquisa/index.html?q=${encodeURIComponent(searchQuery)}`;
+        }
+    });
+</script>
 </body>
 
 </html>
