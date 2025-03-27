@@ -2,15 +2,19 @@
 document.addEventListener("DOMContentLoaded", async() => {
 // Obtém os parâmetros da URL
     const arg = getQuery();
+    const Idcidade = getCityId();
+
+    const headers = new Headers({
+        'Content-Type': 'application/json',
+        'Search-Term': encodeURIComponent(arg),  // Passando o termo de pesquisa
+        'City-Id': encodeURIComponent(Idcidade)    // Passando o ID da cidade
+    });
     
     try {
 
         const response = await fetch('/pesquisa',{
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': arg
-            }
+            headers: headers
         });
         if (!response.ok){
             throw new Error("Erro ao procurar produtos");
@@ -30,6 +34,11 @@ function getQuery(){
     const params = new URLSearchParams(window.location.search);
     const searchQuery = params.get("q");
     return searchQuery;
+}
+
+function getCityId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("cidade");
 }
 
 document.getElementById('searchButton').addEventListener('click', function() {

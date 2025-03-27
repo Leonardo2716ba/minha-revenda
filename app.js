@@ -225,17 +225,20 @@ app.get('/meus_produtos', async(req, res) => {
 })
 
 app.get('/pesquisa', async(req, res) =>{
-    const pesquisado = req.headers.authorization;
-
+    const searchTerm = req.headers['search-term'];  // O valor de 'Search-Term'
+    const cityId = req.headers['city-id'];  // O valor de 'City-Id'
+    
+    console.log(searchTerm);  // Obtém o termo de pesquisa
+    console.log(cityId);
     try {
-        const pesquisalike = `%${pesquisado}%`;
+        const pesquisalike = `%${searchTerm}%`;
         const db = await initDatabase();
         const produtos_pesquisados = await db.all(
-            `SELECT	produtos.foto , produtos.nome, produtos.preco, produtos.quantidade, produtos.descricao, revendedores.telefone
+            `SELECT	produtos.foto , produtos.nome, produtos.preco, produtos.quantidade, produtos.descricao, revendedores.telefone, revendedores.cidade
              FROM	produtos INNER JOIN revendedores
              ON produtos.iddono = revendedores.id
-             WHERE (produtos.nome LIKE ?) or (produtos.descricao LIKE ?)`,
-             [pesquisalike, pesquisalike]
+             WHERE ((produtos.nome LIKE ?) or (produtos.descricao LIKE ?)) and (revendedores.cidade LIKE ?)`,
+             [pesquisalike, pesquisalike, cityId]
         );
         console.log("produtos recebidos", produtos_pesquisados);
         if(produtos_pesquisados){

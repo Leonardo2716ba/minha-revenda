@@ -129,4 +129,10 @@ th {
         width: 80%;
     }
 }
-</style>
+
+select {
+    color: black; /* Cor do texto visível */
+    background-color: white; /* Fundo branco para contraste */
+    border: 1px solid #ccc; /* Borda visível */
+    padding: 8px; /* Melhor espaçamento */
+}
